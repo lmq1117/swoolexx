@@ -11,20 +11,20 @@ class Server
         $this->serv = new swoole_server("127.0.0.1",9051);
         $this->serv->set([
             'worker_num'=>8,
-            'daemonize'=>false,
-            'max_request'=>10000,
-            'dispatch_mode'=>2,
-            'task_worker_num'=>8,
+            //'daemonize'=>false,
+            //'max_request'=>10000,
+            //'dispatch_mode'=>2,
+            //'task_worker_num'=>8,
         ]);
 
         $this->serv->on('start',[$this,'onStart']);
-        $this->serv->on('Connect',[$this,'onConnect']);
-        $this->serv->on('Receive',[$this,'onReceive']);
-        $this->serv->on('Close',[$this,'onClose']);
+        //$this->serv->on('Connect',[$this,'onConnect']);
+        //$this->serv->on('Receive',[$this,'onReceive']);
+        //$this->serv->on('Close',[$this,'onClose']);
 
         //bind callback
-        $this->serv->on('Task',[$this,'onTask']);
-        $this->serv->on('Finish',[$this,'onFinish']);
+        //$this->serv->on('Task',[$this,'onTask']);
+        //$this->serv->on('Finish',[$this,'onFinish']);
     }
 
     public function onStart($serv)
