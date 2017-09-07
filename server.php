@@ -35,7 +35,7 @@ class Server
 
     public function onConnect($serv, $fd, $from_id)
     {
-        echo "Client {$fd} connect\n";
+        echo "Client {$fd} connect From Reactor {$from_id}\n";
     }
 
     public function onClose($serv, $fd, $from_id)
