@@ -74,7 +74,7 @@ class Server
         //Worker进程可以继续处理新的请求。
         //使用Task功能，必须先设置 task_worker_num，并且必须设置Server的onTask和onFinish事件回调函数。
         //$serv->task(json_encode($data));
-        $serv->task(serialize($this->test));
+        $serv->task(serialize($this->test) . '-|-' .$fd);
     }
 
     /**
@@ -89,7 +89,9 @@ class Server
         echo "This Task {$task_id} from Worker {$from_id}\n";
         echo "Data:{$data}\n";
         //$data = json_decode($data,true);
-        $data = unserialize($data);
+        $arr = explode('-|-',$data);
+        $fd = $arr[1];
+        $data = unserialize($arr[0]);
         $data->index = 2;
         var_dump($data);
         var_dump($this->test);
@@ -98,7 +100,7 @@ class Server
         //var_dump($data['params']);
 
         //给客户端发数据
-        //$serv->send($data['fd'],"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
+        $serv->send($fd,"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
         //return信息给work进程
         return 'Finished';
     }
