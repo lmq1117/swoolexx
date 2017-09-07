@@ -93,8 +93,10 @@ class Server
         $data->index = 2;
         var_dump($data);
         var_dump($this->test);
+
         //echo "taskwork进程收到任务Receive Task:{$data['task']}\n";
         //var_dump($data['params']);
+
         //给客户端发数据
         //$serv->send($data['fd'],"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
         //return信息给work进程
