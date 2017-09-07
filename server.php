@@ -17,8 +17,8 @@ class Server
             'task_worker_num'=>8,
         ]);
 
-        $this->serv->on('start',[$this,'onStart']);
-        $this->serv->on('connect',[$this,'onConnect']);
+        $this->serv->on('Start',[$this,'onStart']);
+        $this->serv->on('Connect',[$this,'onConnect']);
         $this->serv->on('Receive',[$this,'onReceive']);
         $this->serv->on('Close',[$this,'onClose']);
 
