@@ -8,7 +8,7 @@ class Server
 
     public function __construct()
     {
-        $this->serv = new swoole_server("127.0.0.1",9088);
+        $this->serv = new swoole_server("127.0.0.1",9051);
         $this->serv->set([
             'worker_num'=>8,
             'daemonize'=>false,
@@ -17,7 +17,7 @@ class Server
             'task_worker_num'=>8,
         ]);
 
-        $this->serv->on('Start',[$this,'onStart']);
+        $this->serv->on('start',[$this,'onStart']);
         $this->serv->on('Connect',[$this,'onConnect']);
         $this->serv->on('Receive',[$this,'onReceive']);
         $this->serv->on('Close',[$this,'onClose']);
