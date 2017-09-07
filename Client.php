@@ -16,7 +16,7 @@ class Client
 
     public function connect()
     {
-        if (!$this->client->connnect("127.0.0.1",9051,1))
+        if (!$this->client->connect("127.0.0.1",9051,1))
         {
             echo "Error:{$this->client->errMsg}[{$this->client->errCode}]\n";
         }
