@@ -28,7 +28,8 @@ function onMessage(swoole_websocket_server $serv,$frame){
     $tulingapiurl = "http://www.tuling123.com/openapi/api";
     $tulingapiurl .= "?key=d0b2a59562384fbc9b0869b2ba16cdb2&info={$frame->data}&userid={$frame->fd}";
     file_put_contents('/tmp/tuling.log',date('Y-m-d H:i:s',time()).'----'.$tulingapiurl);
-    curl_get($tulingapiurl);
+    $res = curl_get($tulingapiurl);
+    var_dump($res);
 
 
     //APIkey:d0b2a59562384fbc9b0869b2ba16cdb2
@@ -55,7 +56,8 @@ function curl_get($url)
     $resData = curl_exec($ch);
     curl_close($ch);
 
-    print_r($resData);
+    //print_r($resData);
+    return $resData;
 }
 
 $server->start();
