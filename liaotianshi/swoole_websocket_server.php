@@ -24,11 +24,37 @@ function onMessage(swoole_websocket_server $serv,$frame){
     //$frame->fd 是客户端id，$frame->data是客户端发送的数据
     //服务端向客户端发送数据是用 $server->push( '客户端id' ,  '内容')
     echo "收到来自客户端id是--{$frame->fd}--的消息:内容是--{$frame->data}--,opcode:--{$frame->opcode}--,fin:--{$frame->finish}--\n";
+
+    $tulingapiurl = "http://www.tuling123.com/openapi/api";
+    $tulingapiurl .= "?key=d0b2a59562384fbc9b0869b2ba16cdb2&info={$frame->data}&userid={$frame->fd}";
+    curl_get($tulingapiurl);
+
+
+    //APIkey:d0b2a59562384fbc9b0869b2ba16cdb2
+    //secret：d3a6ffb397c0bd8c
+
+
+
     $serv->push($frame->fd,'我是服务器，我收到你消息了，朕知道了，阅。');
 }
 
 function onClose($serv,$fd){
     echo "客户端id为 --{$fd}-- 闪人了！";
+}
+
+function curl_get($url)
+{
+    $ch = curl_init();
+
+    //设置选项，包括URL
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+
+    $resData = curl_exec($ch);
+    curl_close($ch);
+
+    print_r($resData);
 }
 
 $server->start();
