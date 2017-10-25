@@ -57,6 +57,7 @@ class Server
     public function onClose($serv, $fd, $from_id)
     {
         echo "Client =={$fd}== close connection\n";
+        echo "\n";
     }
 
     /**
@@ -111,7 +112,7 @@ class Server
         var_dump($data['params']);
 
         //给客户端发数据
-        $serv->send($data['fd'],"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
+        $serv->send($data['fd'],"通过描述符给客户端发送数据 Hello Task ".date('Y-m-d H:i:s',time()));
         //$serv->send($fd,"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
         //return信息给work进程
         return 'Finished';
@@ -121,7 +122,7 @@ class Server
     {
         echo "Task =={$task_id}== finish\n";
         echo "Result:=={$data}==\n";
-        var_dump($this->test);
+        //var_dump($this->test);
     }
 }
 
