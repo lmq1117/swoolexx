@@ -32,23 +32,35 @@ class Server
         $this->serv->start();
     }
 
+    /*
+        Server启动在主进程的主线程回调此函数，函数原型
+            function onStart(swoole_server $server);
+        在此事件之前Swoole Server已进行了如下操作
+            已创建了manager进程
+            已创建了worker子进程
+            已监听所有TCP/UDP端口
+            已监听了定时器
+        接下来要执行
+            主Reactor开始接收事件，客户端可以connect到Server
+    */
     public function onStart($serv)
     {
         echo "Start\n";
     }
 
+    //有新的连接进入时，在worker进程中回调。函数原型
     public function onConnect($serv, $fd, $from_id)
     {
-        echo "Client {$fd} connect From Reactor {$from_id}\n";
+        echo "Client =={$fd}== connect From Reactor =={$from_id}==\n";
     }
 
     public function onClose($serv, $fd, $from_id)
     {
-        echo "Client {$fd} close connection\n";
+        echo "Client =={$fd}== close connection\n";
     }
 
     /**
-     * 任务投递  reactor线程中??
+     * 接收到数据时回调此函数，发生在worker进程中。函数原型：
      * @param swoole_server $serv
      * @param $fd
      * @param $from_id
@@ -56,25 +68,23 @@ class Server
      */
     public function onReceive( swoole_server $serv, $fd, $from_id, $data)
     {
-        echo "Get Message From Client {$fd}:{$data}\n";
-        $this->test = new Test();
-        var_dump($this->test);
+        echo "Get Message From Client =={$fd}==:=={$data}==\n";
 
         // 1 声明一个变量，存放传给Task的数据
-        //$data = [
-        //    //task任务名
-        //    'task'=>'task_1',
-        //    //收到的来自客户端的数据
-        //    'params'=>$data,
-        //    //客户端描述符
-        //    'fd'=>$fd,
-        //];
+        $data2 = [
+            //task任务名
+            'task'=>'task_1',
+            //收到的来自客户端的数据
+            'params'=>$data,
+            //客户端描述符
+            'fd'=>$fd,
+        ];
         // 2 work进程中，通过task方法，把数据传给taskwork进程；只能传字符串，通知到taskwork进程
         //投递一个异步任务到task_worker池中。此函数是非阻塞的，执行完毕会立即返回。
         //Worker进程可以继续处理新的请求。
         //使用Task功能，必须先设置 task_worker_num，并且必须设置Server的onTask和onFinish事件回调函数。
-        //$serv->task(json_encode($data));
-        $serv->task(serialize($this->test) . '-|-' .$fd);
+        $serv->task(json_encode($data2));
+        //$serv->task(serialize($this->test) . '-|-' .$fd);
     }
 
     /**
@@ -86,29 +96,31 @@ class Server
      */
     public function onTask($serv, $task_id, $from_id, $data)
     {
-        echo "This Task {$task_id} from Worker {$from_id}\n";
-        echo "Data:{$data}\n";
-        //$data = json_decode($data,true);
-        $arr = explode('-|-',$data);
-        $fd = $arr[1];
-        $data = unserialize($arr[0]);
-        $data->index = 2;
-        var_dump($data);
-        var_dump($this->test);
+        echo "This Task =={$task_id}== from Worker =={$from_id}==\n";
+        //echo "Data:{$data}\n";
+        $data = json_decode($data,true);
+        //$arr = explode('-|-',$data);
+        //$fd = $arr[1];
+        //$data = unserialize($arr[0]);
+        //$data->index = 2;
+        //var_dump($data);
+        //var_dump($this->test);
 
-        //echo "taskwork进程收到任务Receive Task:{$data['task']}\n";
-        //var_dump($data['params']);
+        echo "taskwork进程收到任务Receive Task:=={$data['task']}==\n";
+        echo 'line'.__LINE__."\n";
+        var_dump($data['params']);
 
         //给客户端发数据
-        $serv->send($fd,"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
+        $serv->send($data['fd'],"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
+        //$serv->send($fd,"通过描述符给客户端发送数据 Hello Task".date('Y-m-d H:i:s',time()));
         //return信息给work进程
         return 'Finished';
     }
 
     public function onFinish($serv, $task_id, $data)
     {
-        echo "Task {$task_id} finish\n";
-        echo "Result:{$data}\n";
+        echo "Task =={$task_id}== finish\n";
+        echo "Result:=={$data}==\n";
         var_dump($this->test);
     }
 }
