@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script>
+		var exampleSocket = new WebSocket("ws://120.24.19.13:9886");
+
+		exampleSocket.onopen = function (e) {
+			exampleSocket.send("亲爱的服务器，我是客户端，我连上你啦！");
+		}
+		exampleSocket.onmessage = function (e) {
+			console.log(e.data);
+			document.getElementById('log').innerHTML = document.getElementById('log').innerHTML + "我：" + document.getElementById('content').value + "<br />服务器：" + e.data + "<br />";
+			document.getElementById('content').value = '';
+		}
+	</script>
+</head>
+<body>
+	<div id="log">
+		
+	</div>
+	<input type="text" id="content">
+	<button onclick="exampleSocket.send( document.getElementById('content').value );">发送</button>
+</body>
+</html>
