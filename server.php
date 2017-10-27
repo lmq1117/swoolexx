@@ -121,7 +121,7 @@ class Server
         $data = unserialize($data);
         $data->index = 2;
         var_dump($data);
-        var_dump($this->index);
+        var_dump($this->test);
         //echo 'line'.__LINE__."\n";
         //var_dump($data['params']);
 
