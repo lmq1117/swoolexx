@@ -56,12 +56,22 @@ class MySQLPool
 
     public function onReceive(swoole_server $serv, $fd, $from_id, $data )
     {
+        $task = [
+            'sql' => "insert into test (name,age) values (?,?)",
+            'params' => ['swoole'.mt_rand(111,999),mt_rand(1,99)],
+            'fd' => $fd
+        ];
 
+        $serv->task(json_encode($task));
     }
 
     public function onTask( $serv, $task_id, $from_id, $data )
     {
         try {
+            $data = json_decode($data, true);
+            $statment = $this->pdo->prepare($data['sql']);
+            $statment->execute($data['params']);
+            $serv->send($data['fd'],'Insert success. ');
             return true;
         } catch ( PDOException $e ) {
             var_dump($e);
