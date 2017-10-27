@@ -57,7 +57,7 @@ class Server
     public function onClose($serv, $fd, $from_id)
     {
         echo "Client =={$fd}== close connection\n";
-        echo "==========链接分割线============\n";
+        //echo "==========链接分割线============\n";
     }
 
     /**
