@@ -1,0 +1,2 @@
+可以在task()中通过序列化传递一个Worker进程中对象的拷贝到 TaskWorker进程
+但是不能通过修改TaskWorker进程中对象的成员属性的值反馈到Worker进程中
