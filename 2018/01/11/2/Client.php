@@ -1,5 +1,6 @@
 <?php
 /**
+ * MySQL连接池Client
  * Created by PhpStorm.
  * User: kevin
  * Date: 2017/9/6
