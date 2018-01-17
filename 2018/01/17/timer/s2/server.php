@@ -1,11 +1,15 @@
 <?php
 /**
- * MySQL连接池
+ * Timer 简单示例2
  */
+class Test{
+    public $index = 0;
+}
 class MySQLPool
 {
     private $server;
-    private $pdo;
+    //private $pdo;
+    private $test;
 
     public function __construct()
     {
@@ -69,10 +73,9 @@ class MySQLPool
         } else { //worker进程
             echo "WorkerProcess Start..\n";
             if ($worker_id == 0) {
-                swoole_timer_tick(1000, function ($timer_id, $params) {
-                    echo "Timer Tick Running..\n";
-                    echo $timer_id."--recv--".$params."\n";
-                }, 'Hello,Timer\n');
+                $this->test = new Test();
+                $this->test->index = 1;
+                swoole_timer_tick(1000, [$this,'onTick'], 'Hello,Timer\n');
             }
         }
     }
@@ -127,6 +130,19 @@ class MySQLPool
     public function onFinish($server, $task_id, $data)
     {
         var_dump("result: " . $data);
+
+    }
+
+    public function onTick($timer_id, $params){
+        static $i = 1;
+        echo "Timer timer_id {$timer_id} is Running..\n";
+        echo "Params {$params}\n";
+
+        echo "Timer Tick Running..\n";
+        echo $timer_id."--recv--".$params."\n";
+        echo $i;
+        var_dump($this->test);
+        $i++;
 
     }
 
